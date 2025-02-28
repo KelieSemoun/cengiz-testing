@@ -1,8 +1,7 @@
-import { inject, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 import { expect } from '@jest/globals';
 
 import { SessionService } from './session.service';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { SessionInformation } from '../interfaces/sessionInformation.interface';
 
 describe('SessionService', () => {
@@ -25,7 +24,7 @@ describe('SessionService', () => {
 
   it('should successfully update sessionService attributes upon user login', () => {
 
-    const mockUser: SessionInformation = {
+    const mockSessionInformation: SessionInformation = {
       token: 'test-token',
       type: 'user',
       id: 1,
@@ -35,15 +34,15 @@ describe('SessionService', () => {
       admin: false
     };
 
-    service.logIn(mockUser);
+    service.logIn(mockSessionInformation);
 
-    expect(service.sessionInformation).toEqual(mockUser);
+    expect(service.sessionInformation).toEqual(mockSessionInformation);
     expect(service.isLogged).toBe(true);
   });
 
   it('should successfully update sessionService attributes upon user logout', () => {
 
-    const mockUser: SessionInformation = {
+    const mockSessionInformation: SessionInformation = {
       token: 'test-token',
       type: 'user',
       id: 1,
@@ -53,7 +52,7 @@ describe('SessionService', () => {
       admin: false
     };
 
-    service.logIn(mockUser);
+    service.logIn(mockSessionInformation);
     service.logOut();
 
     expect(service.sessionInformation).toEqual(undefined);
