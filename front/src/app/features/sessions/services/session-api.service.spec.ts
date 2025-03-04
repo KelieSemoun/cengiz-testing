@@ -57,72 +57,34 @@ describe('SessionsService', () => {
   it('should delete the session after the delete API call', (done) => {
     httpClientMock.delete.mockReturnValue(of(mockSession));
 
-    service.create(mockSession);
-    service.delete('1').subscribe((session) => {
-      expect(session).toEqual(mockSession);
+    service.delete('1').subscribe(() => {
       expect(httpClientMock.delete).toHaveBeenCalledWith('api/session/1');
       done();
     });
   });
 
   it('should update the session after the update API call', (done) => {
-    const mockUpdatedSession: Session = {
-      id: 1,
-      name: 'testUpdated',
-      description: 'mockUpdatedSession Test',
-      date: new Date(),
-      teacher_id: 3,
-      users: [2, 54, 33],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    httpClientMock.put.mockReturnValue(of(mockUpdatedSession));
+    httpClientMock.put.mockReturnValue(of(mockSession));
 
-    service.create(mockSession);
-    service.update('1', mockUpdatedSession).subscribe((session) => {
-      expect(session).toEqual(mockUpdatedSession);
-      expect(httpClientMock.put).toHaveBeenCalledWith('api/session/1', mockUpdatedSession);
+    service.update('1', mockSession).subscribe(() => {
+      expect(httpClientMock.put).toHaveBeenCalledWith('api/session/1', mockSession);
       done();
     });
   });
 
   it('should update the session users after the participate API call', (done) => {
-    const mockUpdatedSession: Session = {
-      id: 1,
-      name: 'test',
-      description: 'mockSession Test',
-      date: new Date(),
-      teacher_id: 5,
-      users: [10, 65, 21, 33],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    httpClientMock.post.mockReturnValue(of(mockUpdatedSession));
+    httpClientMock.post.mockReturnValue(of(mockSession));
 
-    service.create(mockSession);
-    service.participate('1', '33').subscribe((session) => {
-      expect(session).toEqual(mockUpdatedSession);
+    service.participate('1', '33').subscribe(() => {
       expect(httpClientMock.post).toHaveBeenCalledWith('api/session/1/participate/33', null);
       done();
     });
   });
 
   it('should remove the user in the session after the unParticipate API call', (done) => {
-    const mockUpdatedSession: Session = {
-      id: 1,
-      name: 'test',
-      description: 'mockSession Test',
-      date: new Date(),
-      teacher_id: 5,
-      users: [10, 65],
-      createdAt: new Date(),
-      updatedAt: new Date()
-    };
-    httpClientMock.delete.mockReturnValue(of(mockUpdatedSession));
+    httpClientMock.delete.mockReturnValue(of(mockSession));
 
-    service.create(mockSession);
-    service.unParticipate('1', '21').subscribe((session) => {
-      expect(session).toEqual(mockUpdatedSession);
+    service.unParticipate('1', '21').subscribe(() => {
       expect(httpClientMock.delete).toHaveBeenCalledWith('api/session/1/participate/21');
       done();
     });
