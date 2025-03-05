@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -29,6 +29,7 @@ describe('FormComponent', () => {
   let sessionService: SessionService;
   let activatedRoute: ActivatedRoute;
   let formBuilder: FormBuilder;
+  let compiled: HTMLElement;
 
   const mockSessionService = {
     sessionInformation: { admin: true }
@@ -79,6 +80,7 @@ describe('FormComponent', () => {
     jest.spyOn(component as any, 'initForm'); // Spy on private method
     jest.spyOn(component as any, 'exitPage'); // Spy on private method
     fixture.detectChanges();
+    compiled = fixture.nativeElement;
   });
 
   it('should create', () => {
@@ -200,5 +202,57 @@ describe('submit()', () => {
         description: 'Test description'
       });
     });
-  });    
+  }); 
+  
+  describe('Integration Tests', () => {
+    it('should display "Create session" when onUpdate is false', () => {
+      component.onUpdate = false;
+      fixture.detectChanges();
+  
+      const h1 = compiled.querySelector('h1');
+      expect(h1?.textContent?.trim()).toBe('Create session');
+    });
+  
+    it('should display "Update session" when onUpdate is true', () => {
+      component.onUpdate = true;
+      fixture.detectChanges();
+  
+      const h1 = compiled.querySelector('h1');
+      expect(h1?.textContent?.trim()).toBe('Update session');
+    });
+
+    it('should call submit() when the form is submitted', () => {
+      jest.spyOn(component, 'submit');
+    
+      // Fill in the form
+      component.sessionForm?.patchValue({
+        name: 'New Session',
+        date: '2025-01-01',
+        teacher_id: 123,
+        description: 'This is a test session'
+      });
+    
+      fixture.detectChanges();
+    
+      // Click the submit button
+      const submitButton = compiled.querySelector('button[type="submit"]') as HTMLElement;
+      submitButton?.click();
+    
+      expect(component.submit).toHaveBeenCalled();
+    });
+
+    it('should disable submit button when form is invalid', () => {
+      component.sessionForm?.patchValue({
+        name: '', // Missing required field
+        date: '',
+        teacher_id: null,
+        description: ''
+      });
+    
+      fixture.detectChanges();
+    
+      const submitButton = compiled.querySelector('button[type="submit"]');
+      expect(submitButton?.hasAttribute('disabled')).toBe(true);
+    });
+  });
 });
