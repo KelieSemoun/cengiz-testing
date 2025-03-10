@@ -1,4 +1,4 @@
-describe('Dashboard Tests (Using cy.session)', () => {
+describe('Session spec', () => {
     beforeEach(() => {
         cy.intercept('GET', '/api/session', {
             statusCode: 200,
@@ -40,11 +40,12 @@ describe('Dashboard Tests (Using cy.session)', () => {
         });
     })
 
-    it('Displays Details and Edit button as an admin', () => {
+    it('Displays Create and Edit button only as an admin', () => {
         cy.get('.items .item').should('have.length', 2);
 
+        cy.get('button').contains('Create').should('be.visible');
+
         cy.get('.item').first().within(() => {
-            cy.get('button').contains('Detail').should('be.visible');
             cy.get('button').contains('Edit').should('be.visible');
         });
     })
