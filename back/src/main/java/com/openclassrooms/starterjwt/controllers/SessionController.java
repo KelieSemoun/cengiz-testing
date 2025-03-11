@@ -3,8 +3,6 @@ package com.openclassrooms.starterjwt.controllers;
 
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,6 +19,7 @@ import com.openclassrooms.starterjwt.mapper.SessionMapper;
 import com.openclassrooms.starterjwt.models.Session;
 import com.openclassrooms.starterjwt.services.SessionService;
 
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
