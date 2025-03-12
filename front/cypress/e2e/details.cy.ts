@@ -1,9 +1,8 @@
 describe('Details spec', () => {
-    beforeEach(() => {
-        cy.loginAndSetupSessionDetail();
-    });
 
     it('Correctly loads in details page', () => {
+        cy.loginAndSetupSessionDetail();
+
         cy.url().should('include', 'detail/1');
 
         cy.get('mat-card-title').should('contain', 'Morning Yoga')
@@ -12,18 +11,18 @@ describe('Details spec', () => {
     });
 
     it('Displays Delete button when logged as admin', () => {
+        cy.loginAndSetupSessionDetail();
+
         cy.get('mat-card-title').within(() => {
             cy.get('button').should('exist').and('contain', 'Delete');
         });
     });
     
     it('Does not display Delete button when logged as non admin', () => {
-        beforeEach(() => {
             cy.loginAndSetupSessionDetail(false);
-        });
 
         cy.get('mat-card-title').within(() => {
-            cy.get('button').should('not.exist');
+            cy.get('button').should('exist').and('not.contain', 'Delete');
         });
     })
 });
