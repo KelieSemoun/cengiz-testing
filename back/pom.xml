@@ -208,6 +208,12 @@
 									</limits>
 								</rule>
 							</rules>
+							<excludes>
+			                    <exclude>com/openclassrooms/starterjwt/dto/**</exclude>
+			                    <exclude>com/openclassrooms/starterjwt/models/**</exclude>
+			                    <exclude>com/openclassrooms/starterjwt/payload/**</exclude>
+			                    <exclude>com/openclassrooms/starterjwt/mapper/**</exclude>
+			                </excludes>
 						</configuration>
 					</execution>
 				</executions>
