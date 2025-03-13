@@ -22,10 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.openclassrooms.starterjwt.dto.SessionDto;
 import com.openclassrooms.starterjwt.mapper.SessionMapper;
 import com.openclassrooms.starterjwt.models.Session;
@@ -38,15 +40,14 @@ class SessionControllerIT {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
-    private ObjectMapper objectMapper;
-
     @MockBean
     private SessionService sessionService;
 
     @MockBean
     private SessionMapper sessionMapper;
-
+    
+    private ObjectMapper objectMapper;
+    
     private final Long sessionId = 1L;
     private final Long userId = 100L;
     private Session session;
@@ -54,6 +55,10 @@ class SessionControllerIT {
 
     @BeforeEach
     void setup() {
+    	objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.findAndRegisterModules();
+         
         session = new Session();
         session.setId(sessionId);
         session.setName("Yoga Session");
@@ -159,11 +164,13 @@ class SessionControllerIT {
     }
 
 
-    @WithMockUser(username = "testuser", roles = {"USER"})
     @Test
+    @WithMockUser(username = "testuser", roles = {"USER"})
     void testUpdateSession_BadRequest() throws Exception {
+        SessionDto sessionDto = new SessionDto(sessionId, "Yoga Session", new Date(), 1L, "Description", List.of(), LocalDateTime.now(), LocalDateTime.now());
+
         mockMvc.perform(put("/api/session/{id}", "invalid")
-                .contentType("application/json")
+                .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(sessionDto)))
                 .andExpect(status().isBadRequest());
     }
