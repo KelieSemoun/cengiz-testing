@@ -1,6 +1,7 @@
 package com.openclassrooms.starterjwt.payload.request;
 
-import jakarta.validation.constraints.NotBlank;
+import javax.validation.constraints.*;
+
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
