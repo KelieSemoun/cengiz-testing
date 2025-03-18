@@ -67,9 +67,9 @@ Open the corresponding folder and open in a browser the corresponding `index.htm
 
 ### End-to-End
 
-To test all files, run the following command in `cengiz-testing/front` :
+To test all files, run the following command in `cengiz-testing/front` (NOTE : Google Chrome is required otherwise the command will not work) :
 
-> npm run e2e
+> npm run e2e:ci
 
 To generate the coverage report, run the following command (NOTE : YOU NEED TO HAVE RAN THE PREVIOUS COMMAND FOR THIS ONE TO WORK)
 
