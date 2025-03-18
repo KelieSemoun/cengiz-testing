@@ -20,7 +20,7 @@ describe('Login spec', () => {
           body: { message: "Invalid credentials" }
         });
       }
-    });
+    }).as('login');
 
     cy.intercept(
       {
@@ -41,4 +41,13 @@ describe('Login spec', () => {
 
     cy.get('p.error').should('be.visible').and('contain.text', 'An error occurred');
   })
+
+  it('Login with wrong credentials', () => {
+    cy.get('input[formControlName=email]').type('yoga@studio.com');
+    cy.get('input[formControlName=password]').type('invalid{enter}{enter}');
+  
+    cy.wait('@login');
+  
+    cy.get('p.error').should('be.visible').and('contain.text', 'An error occurred');
+  });  
 });

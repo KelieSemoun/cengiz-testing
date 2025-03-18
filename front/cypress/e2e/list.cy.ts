@@ -1,4 +1,4 @@
-describe('Session spec', () => {
+describe('List spec', () => {
     beforeEach(() => {
         cy.intercept('GET', '/api/session', {
             statusCode: 200,

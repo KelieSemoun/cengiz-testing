@@ -16,4 +16,12 @@ declare namespace Cypress {
      */
     loginAndSetupSessionDetail(admin?: boolean): Chainable<void>;
   }
+
+  interface Chainable {
+    /**
+     * Custom command to log in and setup session details
+     * @param admin - Whether the user is an admin (true) or not (false)
+     */
+    loginAndSetupMe(admin?: boolean): Chainable<void>;
+  }
 }

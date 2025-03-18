@@ -47,8 +47,12 @@ Cypress.Commands.add('login', (admin = true) => {
     statusCode: 200,
     body: {
       id: 1,
-      username: 'testuser',
-      admin: admin
+      firstName: 'Test',
+      lastName: 'User',
+      email: 'yoga@studio.com',
+      admin: admin,
+      createdAt: '2024-06-01T09:00:00.000Z',
+      updatedAt: '2024-07-01T10:30:00.000Z',
     }
   });
 
@@ -100,7 +104,7 @@ Cypress.Commands.add('loginAndSetupSessionDetail', (admin = true) => {
   cy.intercept('GET', '/api/teacher/201', {
     statusCode: 200,
     body: {
-      id: 201,
+      id: '201',
       firstName: 'Alice',
       lastName: 'Brown',
       createdAt: '2024-06-01T09:00:00.000Z',
@@ -118,4 +122,31 @@ Cypress.Commands.add('loginAndSetupSessionDetail', (admin = true) => {
 
   cy.wait('@getSession'); 
   cy.wait('@getTeacher'); 
+})
+
+Cypress.Commands.add('loginAndSetupMe', (admin = true) => {
+  cy.intercept('GET', '/api/user/1', {
+    statusCode: 200,
+    body: {
+        id: 1,
+        firstName: 'Test',
+        lastName: 'User',
+        email: 'test@studio.com',
+        admin: admin,
+        createdAt: '2024-06-01T09:00:00.000Z',
+        updatedAt: '2024-07-01T10:30:00.000Z',
+    }
+  }).as('getUser');
+
+  cy.intercept('GET', '/api/session', {
+      statusCode: 200,
+      body: []
+  }).as('getSessions');
+
+  cy.login(admin);
+  cy.wait('@getSessions'); 
+
+  cy.get('mat-toolbar').contains('Account').click();
+  cy.url().should('include', '/me');
+  cy.wait('@getUser');
 })
