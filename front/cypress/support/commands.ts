@@ -150,3 +150,75 @@ Cypress.Commands.add('loginAndSetupMe', (admin = true) => {
   cy.url().should('include', '/me');
   cy.wait('@getUser');
 })
+
+Cypress.Commands.add('loginAndSetupFormCreate', () => {
+  cy.intercept('GET', '/api/teacher', {
+    statusCode: 200,
+    body: [
+        { id: 201, firstName: 'Alice', lastName: 'Brown' },
+        { id: 202, firstName: 'John', lastName: 'Doe' }
+    ]
+  }).as('getTeachers');
+
+  cy.intercept('GET', '/api/session', {
+      statusCode: 200,
+      body: []
+  }).as('getSessions');
+
+  cy.login(true);
+  cy.wait('@getSessions'); 
+
+  cy.get('mat-card').contains('Create').click();
+  cy.url().should('include', '/session');
+  cy.wait('@getTeachers')
+})
+
+Cypress.Commands.add('loginAndSetupFormUpdate', () => {
+  cy.intercept('GET', '/api/teacher', {
+    statusCode: 200,
+    body: [
+        { id: 201, firstName: 'Alice', lastName: 'Brown' },
+        { id: 202, firstName: 'John', lastName: 'Doe' }
+    ]
+  }).as('getTeachers');
+
+  cy.intercept('GET', '/api/session', {
+      statusCode: 200,
+      body: [{
+        id: 1,
+        name: 'Morning Yoga',
+        date: '2025-03-15T08:00:00.000Z',
+        description: 'Start your day with a relaxing yoga session.',
+        createdAt: '2025-02-10T14:00:00.000Z',
+        updatedAt: '2025-02-15T10:30:00.000Z',
+        users: [{ id: 101, name: 'John Doe' }, { id: 102, name: 'Jane Smith' }], 
+        teacher_id: 201 
+    }]
+  }).as('getSessions');
+
+  cy.intercept('GET', '/api/session/1', {
+    statusCode: 200,
+    body: {
+      id: 1,
+      name: 'Morning Yoga',
+      date: '2025-03-15T08:00:00.000Z',
+      description: 'Start your day with a relaxing yoga session.',
+      createdAt: '2025-02-10T14:00:00.000Z',
+      updatedAt: '2025-02-15T10:30:00.000Z',
+      users: [{ id: 101, name: 'John Doe' }, { id: 102, name: 'Jane Smith' }], 
+      teacher_id: 201 
+  }
+}).as('getSessionToEdit');
+
+  cy.login(true);
+  cy.wait('@getSessions'); 
+
+  cy.get('.item').should('have.length', 1);
+
+  cy.get('.item').first().within(() => {
+    cy.get('button').contains('Edit').click();
+  });
+
+  cy.url().should('include', '/update/1');
+  cy.wait('@getSessionToEdit')
+})
